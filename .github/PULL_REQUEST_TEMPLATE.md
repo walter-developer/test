@@ -1,15 +1,25 @@
 # Descrição
 
-Por favor, inclua um resumo das mudanças e a motivação por trás delas.
+Por favor, inclua o título resumo da tarefa.
 
-## Tipo de Mudança
+---
 
-- [ ] Bug fix (correção de bug)
-- [ ] Nova funcionalidade (adição de uma nova funcionalidade)
-- [ ] Alteração no código (melhoria ou alteração de uma funcionalidade existente)
+## Referencia
+
+Por favor, inclua o link do card relacionado a esta mudança. 
+Isso é **obrigatório** para garantir que a mudança está associada a uma tarefa ou bug reportado.
+
+[ ] **Link do Card**: [Cole o link aqui](#)
+
+---
+
+## Desenvolvimento
+
+Por favor, inclua o resumo da alteração / desenvolimento da tarefa.
+
+---
 
 ## Checklist
 
 - [ ] Eu li e compreendi o código
 - [ ] Eu testei as mudanças localmente
-- [ ] Eu documentei as minhas mudanças
