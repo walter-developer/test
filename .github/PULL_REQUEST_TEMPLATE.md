@@ -15,7 +15,13 @@ Isso é **obrigatório** para garantir que a mudança está associada a uma tare
 
 ## Desenvolvimento
 
-Por favor, inclua o resumo da alteração / desenvolimento da tarefa.
+Por favor, inclua o resumo da alteração / desenvolimento deste item.
+
+---
+
+## Deploy
+
+Por favor, inclua o passo a passo para deploy deste item.
 
 ---
 
