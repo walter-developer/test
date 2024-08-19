@@ -23,3 +23,5 @@ Por favor, inclua o resumo da alteração / desenvolimento da tarefa.
 
 - [ ] Eu li e compreendi o código
 - [ ] Eu testei as mudanças localmente
+- [ ] Eu atribui a label correta a esta tarefa
+- [ ] Eu atribui os revisores dessa tarefa
