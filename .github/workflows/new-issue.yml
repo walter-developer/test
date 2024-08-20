@@ -13,18 +13,7 @@ jobs:
       run: |
         curl -X POST -u ${{ secrets.JIRA_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
         --header "Content-Type: application/json" \
-        --data '{
-            "fields": {
-               "project": {
-                  "key": "ARKAMA"   # Chave do projeto no Jira
-               },
-               "summary": "${{ github.event.issue.title }}",
-               "description": "${{ github.event.issue.body }}",
-               "issuetype": {
-                  "name": "Task"
-               }
-           }
-        }' \
+        --data '{"fields": {"project": {"key": "ARKAMA"},"summary": "${{ github.event.issue.title }}","description": "${{ github.event.issue.body }}","issuetype": {"name": "Task"}}}' \
         https://arkama.atlassian.net//rest/api/2/issue/
       env:
         JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
