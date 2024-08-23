@@ -17,13 +17,13 @@ jobs:
       run: |
         ISSUE_URL="https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}"
         echo "Issue URL: $ISSUE_URL"
-        echo "::set-output name=issue_url::$ISSUE_URL"
+        echo "ISSUE_URL=$ISSUE_URL" >> $GITHUB_ENV
 
     - name: Check if Jira card exists
       id: check_jira_card
       run: |
         JIRA_URL="https://arkama.atlassian.net"
-        SEARCH_URL="$JIRA_URL/rest/api/3/search?jql=Github%3D%22${{ steps.set_issue_url.outputs.issue_url }}%22"
+        SEARCH_URL="$JIRA_URL/rest/api/3/search?jql=Github%3D%22${{ env.ISSUE_URL }}%22"
         JIRA_USERNAME=${{ secrets.JIRA_EMAIL }}
         JIRA_API_TOKEN=${{ secrets.JIRA_API_TOKEN }}
 
@@ -37,10 +37,10 @@ jobs:
         TOTAL=$(echo $RESPONSE | jq '.total')
 
         echo "Total issues found: $TOTAL"
-        echo "::set-output name=total::$TOTAL"
+        echo "TOTAL=$TOTAL" >> $GITHUB_ENV
 
     - name: Create Jira card if none exists
-      if: steps.check_jira_card.outputs.total == '0'
+      if: env.TOTAL == '0'
       run: |
         JIRA_URL="https://arkama.atlassian.net"
         JIRA_PROJECT_KEY="YOUR_PROJECT_KEY"
@@ -50,11 +50,10 @@ jobs:
         # Create a new Jira card
         curl -X POST -u $JIRA_USERNAME:$JIRA_API_TOKEN \
          --header "Content-Type: application/json" \
-         --data '{"fields": {"project": {"key": "ARKAMA"},\
+         --data '{"fields": {"project": {"key": "'"$JIRA_PROJECT_KEY"'"},\
                 "issuetype": {"name": "Task"}},\
-               "summary": "${{ github.event.issue.title }}",\
-               "description": "${{ github.event.issue.body }}",
-               "customfield_10065": { "name": "Label","value": "${{ github.event.issue.labels[0].name }}"},\
-               "customfield_10071" : "https://github.com/walter-developer/test/issues/00"}'\
+               "summary": "'"${ISSUE_SUMMARY}"'",\
+               "description": "'"${ISSUE_DESCRIPTION}"'",\
+               "customfield_10065": { "name": "Label","value": "'"${{ github.event.issue.labels[0].name }}"'"},\
+               "customfield_10071" : "'"${{ env.ISSUE_URL }}"'"}'\
           "$JIRA_URL/rest/api/3/issue"
-
