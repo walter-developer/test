@@ -24,11 +24,13 @@ jobs:
       run: |
         JIRA_URL="https://arkama.atlassian.net"
         SEARCH_URL="$JIRA_URL/rest/api/3/search?jql=Github%3D%22${{ env.ISSUE_URL }}%22"
-        JIRA_USERNAME=${{ secrets.JIRA_EMAIL }}
-        JIRA_API_TOKEN=${{ secrets.JIRA_API_TOKEN }}
+        
+        # Export secrets for use in curl command
+        echo "JIRA_USERNAME=${{ secrets.JIRA_EMAIL }}" >> $GITHUB_ENV
+        echo "JIRA_API_TOKEN=${{ secrets.JIRA_API_TOKEN }}" >> $GITHUB_ENV
 
         # Debug: Print the entire response
-        echo "User: $JIRA_USERNAME, token: $JIRA_API_TOKEN"
+        echo "$JIRA_USERNAME:$JIRA_API_TOKEN"
         
         # Fetching the Jira search result
         RESPONSE=$(curl -s -u $JIRA_USERNAME:$JIRA_API_TOKEN \
