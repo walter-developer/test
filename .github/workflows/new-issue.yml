@@ -47,7 +47,9 @@ jobs:
 
         echo "Total issues found: $TOTAL"
         echo "TOTAL=$TOTAL" >> $GITHUB_ENV
-
+      env:
+        JIRA_EMAIL: ${{ secrets.JIRA_ACCOUNT }}
+        JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
     - name: Create Jira card if none exists
       if: env.TOTAL == '0'
       run: |
