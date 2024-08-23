@@ -33,6 +33,9 @@ jobs:
           -H "Content-Type: application/json" \
           "$SEARCH_URL")
 
+        # Debug: Print the entire response
+        echo "Response: $RESPONSE"
+        
         # Extract the total number of issues found
         TOTAL=$(echo $RESPONSE | jq '.total')
 
