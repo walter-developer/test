@@ -1,20 +1,60 @@
-name: Create Jira Card from GitHub Issue
+name: Check and Create Jira Card
 
 on:
   issues:
     types: [opened]
 
 jobs:
-  create-jira-issue:
+  check_and_create_card:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Create a new Jira issue
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set GitHub Issue URL
+      id: set_issue_url
       run: |
-        curl -X POST -u ${{ secrets.JIRA_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
-        --header "Content-Type: application/json" \
-        --data '{"fields": {"project": {"key": "ARKAMA"},"summary": "${{ github.event.issue.title }}","description": "${{ github.event.issue.body }}","issuetype": {"name": "Task"}}}' \
-        https://arkama.atlassian.net//rest/api/2/issue/
-      env:
-        JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
-        JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+        ISSUE_URL="https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}"
+        echo "Issue URL: $ISSUE_URL"
+        echo "::set-output name=issue_url::$ISSUE_URL"
+
+    - name: Check if Jira card exists
+      id: check_jira_card
+      run: |
+        JIRA_URL="https://arkama.atlassian.net"
+        SEARCH_URL="$JIRA_URL/rest/api/3/search?jql=Github%3D%22${{ steps.set_issue_url.outputs.issue_url }}%22"
+        JIRA_USERNAME=${{ secrets.JIRA_EMAIL }}
+        JIRA_API_TOKEN=${{ secrets.JIRA_API_TOKEN }}
+
+        # Fetching the Jira search result
+        RESPONSE=$(curl -s -u $JIRA_USERNAME:$JIRA_API_TOKEN \
+          -X GET \
+          -H "Content-Type: application/json" \
+          "$SEARCH_URL")
+
+        # Extract the total number of issues found
+        TOTAL=$(echo $RESPONSE | jq '.total')
+
+        echo "Total issues found: $TOTAL"
+        echo "::set-output name=total::$TOTAL"
+
+    - name: Create Jira card if none exists
+      if: steps.check_jira_card.outputs.total == '0'
+      run: |
+        JIRA_URL="https://arkama.atlassian.net"
+        JIRA_PROJECT_KEY="YOUR_PROJECT_KEY"
+        ISSUE_SUMMARY="GitHub Issue #${{ github.event.issue.number }} - ${{ github.event.issue.title }}"
+        ISSUE_DESCRIPTION="Link: https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
+
+        # Create a new Jira card
+        curl -X POST -u $JIRA_USERNAME:$JIRA_API_TOKEN \
+         --header "Content-Type: application/json" \
+         --data '{"fields": {"project": {"key": "ARKAMA"},\
+               "summary": "${{ github.event.issue.title }}",\
+               "description": "${{ github.event.issue.body }}",
+               "issuetype": {"name": "Task"}},\
+               "customfield_10065": { "name": "Label","value": "bugfix"},\
+               "customfield_10071" : "https://github.com/walter-developer/test/issues/00"}'\
+          "$JIRA_URL/rest/api/3/issue"
+
