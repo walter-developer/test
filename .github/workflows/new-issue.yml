@@ -26,7 +26,7 @@ jobs:
         SEARCH_URL="$JIRA_URL/rest/api/3/search?jql=Github%3D%22$ISSUE_URL%22"
         
         # Fetching the Jira search result
-        RESPONSE=$(curl -s -u "walter-developer@outlook.com":"ATATT3xFfGF0kw0pw0i02gFYfzaxng42xUC9xYDiQRAGoCkCy-aVpp24sbPU1pULeKrK_MKTwWgMYjXAFlv-eI3KRFpCyIkxS8-wtRTCU1D2LDUrRxjgYSQzNoAY0OR2leSS0YF_fiMxiKwqBNmMt7G2UhCesEWRHvJHCMGhAisW5iTl5TWOwus=124A4B82" \
+        RESPONSE=$(curl -s -u "walter-developer@outlook.com":"ATATT3xFfGF0cZKjgrpmZGtJEKtUGgkUJS2eDq2f5Qz19hxT_Lrxw9-IXsfr0cke-HeYjc2RENnaTBYYCF53-GggnbdIV5IF4dtG04KCylpwYfmbhEnaKsOQrhVSCTCYEDmGK1qkBikvAmk0rbBT1Xrf2Yb2LYfq2GwVcbmLuXNBVv0xxMfHijw=080F20FA" \
           -X GET \
           -H "Content-Type: application/json" \
           "$SEARCH_URL")
