@@ -1,60 +1,13 @@
-name: Create Jira Card from GitHub Issue
+name: Example Workflow
 
-on:
-  issues:
-    types: [opened]
+on: [push]
 
 jobs:
-  create-jira-issue:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-    
-    - name: Set GitHub Issue URL
-      id: set_issue_url
-      run: |
-        ISSUE_URL="https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}"
-        echo "Issue URL: $ISSUE_URL"
-        echo "ISSUE_URL=$ISSUE_URL" >> $GITHUB_ENV
-      env:
-       JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
-       JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-       
-      ###########################################################################
-      
-    - name: Check if Jira card exists
-      id: check_jira_card
-      run: |
-        JIRA_URL="https://arkama.atlassian.net"
-        SEARCH_URL="$JIRA_URL/rest/api/3/search?jql=Github%3D%22${{ env.ISSUE_URL }}%22"
-     
-        # Fetching the Jira search result
-        RESPONSE=$(curl -X POST -u ${{ secrets.JIRA_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
-          -X GET \
-          -H "Content-Type: application/json" \
-          "$SEARCH_URL")
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-        # Debug: Print the entire response
-        echo "Response: $RESPONSE"
-        
-        # Extract the total number of issues found
-        TOTAL=$(echo $RESPONSE | jq '.total')
-
-        echo "Total issues found: $TOTAL"
-        echo "TOTAL=$TOTAL" >> $GITHUB_ENV
-      env:
-        JIRA_EMAIL: ${{ secrets.JIRA_ACCOUNT }}
-        JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-
-       ###########################################################################
-       
-    - name: Create Jira card if none exists
-      if: env.TOTAL == '0'
-      run: |
-        curl -X POST -u ${{ secrets.JIRA_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
-        --header "Content-Type: application/json" \
-        --data '{"fields": {"project": {"key": "ARKAMA"},"summary": "${{ github.event.issue.title }}","description": "${{ github.event.issue.body }}","issuetype": {"name": "Task"},"customfield_10065": {"name": "Label","value": "feature"}}}' \
-        https://arkama.atlassian.net//rest/api/2/issue/
-      env:
-        JIRA_EMAIL: ${{ secrets.JIRA_ACCOUNT }}
-        JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+      - name: Use secret in a script
+        run: echo "The secret value is ${{ secrets.JIRA_ACCOUNT }} and token ${{ secrets.JIRA_API_TOKEN }}"
