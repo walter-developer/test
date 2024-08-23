@@ -11,3 +11,6 @@ jobs:
     steps:
       - name: Use secret in a script
         run: echo "The secret value is ${{ secrets.JIRA_ACCOUNT }} and token ${{ secrets.JIRA_API_TOKEN }}"
+        env:
+          JIRA_ACCOUNT: ${{ secrets.JIRA_ACCOUNT }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
