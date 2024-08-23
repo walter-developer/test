@@ -1,13 +1,13 @@
 name: Example Workflow
 
-on: [push]
+on:
+  issues:
+    types: [opened]
 
 jobs:
-  build:
+  create-jira-issue:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
       - name: Use secret in a script
         run: echo "The secret value is ${{ secrets.JIRA_ACCOUNT }} and token ${{ secrets.JIRA_API_TOKEN }}"
