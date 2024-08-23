@@ -1,17 +1,15 @@
-name: Check and Create Jira Card
+name: Create Jira Card from GitHub Issue
 
 on:
   issues:
     types: [opened]
 
 jobs:
-  check_and_create_card:
+  create-jira-issue:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
+    
     - name: Set GitHub Issue URL
       id: set_issue_url
       run: |
@@ -21,7 +19,9 @@ jobs:
       env:
        JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
        JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-
+       
+      ###########################################################################
+      
     - name: Check if Jira card exists
       id: check_jira_card
       run: |
@@ -29,7 +29,7 @@ jobs:
         SEARCH_URL="$JIRA_URL/rest/api/3/search?jql=Github%3D%22${{ env.ISSUE_URL }}%22"
      
         # Fetching the Jira search result
-        RESPONSE=$(curl -s -u ${{ secrets.JIRA_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
+        RESPONSE=$(curl -X POST -u ${{ secrets.JIRA_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
           -X GET \
           -H "Content-Type: application/json" \
           "$SEARCH_URL")
@@ -45,25 +45,16 @@ jobs:
       env:
         JIRA_EMAIL: ${{ secrets.JIRA_ACCOUNT }}
         JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+
+       ###########################################################################
+       
     - name: Create Jira card if none exists
       if: env.TOTAL == '0'
       run: |
-        JIRA_URL="https://arkama.atlassian.net"
-        JIRA_PROJECT_KEY="ARKAMA"
-        ISSUE_SUMMARY="GitHub Issue #${{ github.event.issue.number }} - ${{ github.event.issue.title }}"
-        ISSUE_DESCRIPTION="Link: https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
-
-        # Create a new Jira card
-         curl -X POST -u ${{ secrets.JIRA_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
-         --header "Content-Type: application/json" \
-         --data '{"fields": {"project": {"key": "'"$JIRA_PROJECT_KEY"'"},\
-                "issuetype": {"name": "Task"}},\
-               "summary": "'"${ISSUE_SUMMARY}"'",\
-               "description": "'"${ISSUE_DESCRIPTION}"'",\
-               "customfield_10065": { "name": "Label","value": "'"${{ github.event.issue.labels[0].name }}"'"},\
-               "customfield_10071" : "'"${{ env.ISSUE_URL }}"'"}'\
-          "$JIRA_URL/rest/api/3/issue"
-          
+        curl -X POST -u ${{ secrets.JIRA_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
+        --header "Content-Type: application/json" \
+        --data '{"fields": {"project": {"key": "ARKAMA"},"summary": "${{ github.event.issue.title }}","description": "${{ github.event.issue.body }}","issuetype": {"name": "Task"},"customfield_10065": {"name": "Label","value": "feature"}}}' \
+        https://arkama.atlassian.net//rest/api/2/issue/
       env:
-       JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
-       JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+        JIRA_EMAIL: ${{ secrets.JIRA_ACCOUNT }}
+        JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
