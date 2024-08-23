@@ -51,10 +51,10 @@ jobs:
         curl -X POST -u $JIRA_USERNAME:$JIRA_API_TOKEN \
          --header "Content-Type: application/json" \
          --data '{"fields": {"project": {"key": "ARKAMA"},\
+                "issuetype": {"name": "Task"}},\
                "summary": "${{ github.event.issue.title }}",\
                "description": "${{ github.event.issue.body }}",
-               "issuetype": {"name": "Task"}},\
-               "customfield_10065": { "name": "Label","value": "bugfix"},\
+               "customfield_10065": { "name": "Label","value": "${{ github.event.issue.labels[0].name }}"},\
                "customfield_10071" : "https://github.com/walter-developer/test/issues/00"}'\
           "$JIRA_URL/rest/api/3/issue"
 
