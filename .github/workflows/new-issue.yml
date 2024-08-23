@@ -66,3 +66,6 @@ jobs:
                "customfield_10065": { "name": "Label","value": "'"${{ github.event.issue.labels[0].name }}"'"},\
                "customfield_10071" : "'"${{ env.ISSUE_URL }}"'"}'\
           "$JIRA_URL/rest/api/3/issue"
+      env:
+       JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+       JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
