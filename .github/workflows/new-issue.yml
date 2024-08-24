@@ -9,7 +9,6 @@ on:
 jobs:
   create-jira-issue:
     runs-on: ubuntu-latest
-    environment: build
     steps:
       - name: Show repo env secret
         run: |
