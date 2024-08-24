@@ -13,3 +13,4 @@ jobs:
       - name: Show repo env secret
         run: |
           echo ${{ secrets.JIRA_ACCOUNT }}
+          echo ${{ secrets.JIRA_TOKEN_API }}
