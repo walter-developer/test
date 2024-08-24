@@ -1,18 +1,17 @@
 name: Example Workflow
 
 on:
+  push:
+    branches:
+      - master
   issues:
     types: [opened]
-
 jobs:
   create-jira-issue:
     runs-on: ubuntu-latest
-    env:
-      JIRA_ACCOUNT: ${{ secrets.JIRA_ACCOUNT }}
-      JIRA_API_TOKEN: ${{ secrets.JIRA_TOKEN_API }}
+    environment: build
     steps:
       - name: Use secret in a script
         run: echo "The secret value is ${{ secrets.JIRA_ACCOUNT }} and token ${{ secrets.JIRA_API_TOKEN }}"
-
       - name: Print all environment variables
         run: env
