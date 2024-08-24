@@ -7,9 +7,27 @@ jobs:
   create-jira-issue:
     runs-on: ubuntu-latest
     steps:
+
+    ###########################################################################
+
     - name: Set GitHub Issue URL
       id: set_issue_url
       env:
        JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
        JIRA_TOKEN_API: ${{ secrets.JIRA_TOKEN_API }}
-      run: echo ${{ secrets.JIRA_ACCOUNT }}
+      #run: echo ${{ secrets.JIRA_ACCOUNT }}
+      run: |
+        ISSUE_URL="https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}"
+        echo "Issue URL: $ISSUE_URL"
+        echo "ISSUE_URL=$ISSUE_URL" >> $GITHUB_ENV
+        echo "JIRA_EMAIL=${{ secrets.JIRA_ACCOUNT }}" >> $GITHUB_ENV
+        echo "JIRA_TOKEN_API=${{ secrets.JIRA_TOKEN_API }}" >> $GITHUB_ENV
+
+    ###########################################################################
+    
+    - name: Check if Jira card exists
+      id: check_jira_card
+      run: |
+        echo ${{ env.ISSUE_URL }}
+        echo ${{ env.JIRA_EMAIL }}
+        echo ${{ env.JIRA_TOKEN_API }}
