@@ -66,7 +66,7 @@ jobs:
         ISSUE_LABEL="${ISSUE_LABEL:-feature}"
 
         # Create a new Jira card
-         curl -X POST -u ${{ secrets.JIRA_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
+         curl -X POST -u ${{ env.JIRA_EMAIL }}:${{ env.JIRA_API_TOKEN }} \
          --header "Content-Type: application/json" \
          --data '{
                "fields": {
