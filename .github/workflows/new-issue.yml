@@ -14,19 +14,28 @@ jobs:
 
     - name: Set GitHub Issue URL
       id: set_issue_url
+      env:
+       JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+       JIRA_TOKEN_API: ${{ secrets.JIRA_TOKEN_API }}
       run: |
         ISSUE_URL="https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}"
         echo "Issue URL: $ISSUE_URL"
         echo "ISSUE_URL=$ISSUE_URL" >> $GITHUB_ENV
+
        
     ###########################################################################
       
     - name: Check if Jira card exists
       id: check_jira_card
+      env:
+       JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+       JIRA_TOKEN_API: ${{ secrets.JIRA_TOKEN_API }}
       run: |
         JIRA_URL="https://arkama.atlassian.net"
         SEARCH_URL="$JIRA_URL/rest/api/3/search?jql=Github%3D%22${{ env.ISSUE_URL }}%22"
-     
+
+        echo ${{ secrets.JIRA_ACCOUNT }}
+        
         # Fetching the Jira search result
         RESPONSE=$(curl -X POST -u ${{ secrets.JIRA_EMAIL }}:${{ secrets.JIRA_TOKEN_API }} \
           -X GET \
@@ -45,6 +54,9 @@ jobs:
     ###########################################################################
        
     - name: Create Jira card if none exists
+      env:
+       JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+       JIRA_TOKEN_API: ${{ secrets.JIRA_TOKEN_API }}
       if: env.TOTAL == '0'
       run: |
         curl -X POST -u ${{ secrets.JIRA_EMAIL }}:${{ secrets.JIRA_TOKEN_API }} \
