@@ -63,6 +63,7 @@ jobs:
         ISSUE_BODY="${{ github.event.issue.body }}"
         ISSUE_URL="https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
         ISSUE_LABEL="${{ github.event.issue.labels[0].name }}"
+        ISSUE_LABEL="${ISSUE_LABEL:-feature}"
 
         # Create a new Jira card
          curl -X POST -u ${{ secrets.JIRA_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
@@ -71,7 +72,7 @@ jobs:
                "customfield_10071" : "'"${ISSUE_URL}"'"},
                 "customfield_10065": {
                                   "name": "Label",
-                                  "value": "'"${{ github.event.issue.labels[0].name }}"'"
+                                  "value": "'"${ISSUE_LABEL}"'"
                 },
                "fields": {
                          "project": {"key": "'"$JIRA_PROJECT_KEY"'"},
@@ -79,5 +80,4 @@ jobs:
                          "summary": "'"${ISSUE_SUMMARY}"'",
                          "description": "'"${ISSUE_BODY}"'"
                 }'\
-          "https://webhook.site/7e82552a-6092-4e47-b462-42c96362ff13"
-          #"$JIRA_URL/rest/api/3/issue"
+          "$JIRA_URL/rest/api/3/issue"
