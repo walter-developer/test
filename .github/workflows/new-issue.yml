@@ -64,22 +64,9 @@ jobs:
         ISSUE_URL="https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
         ISSUE_LABEL="${{ github.event.issue.labels[0].name }}"
         ISSUE_LABEL="${ISSUE_LABEL:-feature}"
-        # Function to escape JSON special characters
-        escape_json() {
-          local input="$1"
-          echo "$input" | sed -e 's/\\/\\\\/g' \
-                             -e 's/"/\\"/g' \
-                             -e 's/\n/\\n/g' \
-                             -e 's/\r/\\r/g' \
-                             -e 's/\t/\\t/g' \
-                             -e 's/`/\\`/g' \
-                             -e 's/´/\\´/g'
-        }
-        # Escape ISSUE_BODY
-        ESCAPED_BODY=$(escape_json "${ISSUE_BODY}")
 
         # Create a new Jira card
          curl -X POST -u ${{ env.JIRA_EMAIL }}:${{ env.JIRA_API_TOKEN }} \
          --header "Content-Type: application/json" \
-         --data '{"fields": { "project": {"key": "ARKAMA"},"issuetype": {"name": "'"${ISSUE_TYPE}"'"},"summary": "'"${ISSUE_SUMMARY}"'","description": "'"${ESCAPED_BODY}"'","customfield_10071" : "'"${ISSUE_URL}"'","customfield_10065": {"name": "Label","value": "'"${ISSUE_LABEL}"'"}}}'\
+         --data '{"fields": { "project": {"key": "ARKAMA"},"issuetype": {"name": "'"${ISSUE_TYPE}"'"},"summary": "'"${ISSUE_SUMMARY}"'","description": "'"${ toJSON(ISSUE_BODY) }"'","customfield_10071" : "'"${ISSUE_URL}"'","customfield_10065": {"name": "Label","value": "'"${ISSUE_LABEL}"'"}}}'\
          "$JIRA_URL/rest/api/2/issue"
