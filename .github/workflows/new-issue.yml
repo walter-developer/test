@@ -28,6 +28,24 @@ jobs:
     - name: Check if Jira card exists
       id: check_jira_card
       run: |
+        JIRA_URL="https://arkama.atlassian.net"
+        SEARCH_URL="$JIRA_URL/rest/api/3/search?jql=Github%3D%22${{ env.ISSUE_URL }}%22"
+        
         echo ${{ env.ISSUE_URL }}
         echo ${{ env.JIRA_EMAIL }}
         echo ${{ env.JIRA_TOKEN_API }}
+
+        # Fetching the Jira search result
+        RESPONSE=$(curl -X POST -u ${{ env.JIRA_EMAIL }}:${{ env.JIRA_TOKEN_API }} \
+          -X GET \
+          -H "Content-Type: application/json" \
+          "$SEARCH_URL")
+
+        # Debug: Print the entire response
+        echo "Response: $RESPONSE"
+        
+        # Extract the total number of issues found
+        TOTAL=$(echo $RESPONSE | jq '.total')
+
+        echo "Total issues found: $TOTAL"
+        echo "TOTAL=$TOTAL" >> $GITHUB_ENV
