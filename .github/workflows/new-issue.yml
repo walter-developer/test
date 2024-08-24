@@ -60,7 +60,7 @@ jobs:
         JIRA_PROJECT_KEY="ARKAMA"
         ISSUE_TYPE="Task"
         ISSUE_SUMMARY="${{ github.event.issue.title }}"
-        ISSUE_BODY="${{ fromJSON(github.event.issue.body) }}"
+        ISSUE_BODY="${{ toJSON(github.event.issue.body) }}"
         ISSUE_URL="https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
         ISSUE_LABEL="${{ github.event.issue.labels[0].name }}"
         ISSUE_LABEL="${ISSUE_LABEL:-feature}"
@@ -68,5 +68,6 @@ jobs:
         # Create a new Jira card
          curl -X POST -u ${{ env.JIRA_EMAIL }}:${{ env.JIRA_API_TOKEN }} \
          --header "Content-Type: application/json" \
-         --data-raw '{"fields": { "project": {"key": "ARKAMA"},"issuetype": {"name": "'"${ISSUE_TYPE}"'"},"summary": "'"${ISSUE_SUMMARY}"'","description": "'"${ISSUE_BODY}"'","customfield_10071" : "'"${ISSUE_URL}"'","customfield_10065": {"name": "Label","value": "'"${ISSUE_LABEL}"'"}}}'\
+         #--data-raw '{"fields": { "project": {"key": "ARKAMA"},"issuetype": {"name": "'"${ISSUE_TYPE}"'"},"summary": "'"${ISSUE_SUMMARY}"'","description": "'"${ISSUE_BODY}"'","customfield_10071" : "'"${ISSUE_URL}"'","customfield_10065": {"name": "Label","value": "'"${ISSUE_LABEL}"'"}}}'\
+         --data-raw "{\"fields\": { \"project\": {\"key\": \"ARKAMA\"},\"issuetype\": {\"name\": \"${ISSUE_TYPE}\"},\"summary\": \"${ISSUE_SUMMARY}\",\"description\": \"$(echo "${ISSUE_BODY}" | sed 's/\\/\\\\/g; s/"/\\"/g; s/\n/\\n/g; s/\r/\\r/g; s/\t/\\t/g')\",\"customfield_10071\": \"${ISSUE_URL}\",\"customfield_10065\": {\"name\": \"Label\",\"value\": \"${ISSUE_LABEL}\"}}}"
          "$JIRA_URL/rest/api/2/issue"
