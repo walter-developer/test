@@ -59,10 +59,10 @@ jobs:
         JIRA_URL="https://arkama.atlassian.net"
         JIRA_PROJECT_KEY="ARKAMA"
         ISSUE_TYPE="Task"
-        #ISSUE_LABEL="${{ github.event.issue.labels[0].name }}"
         ISSUE_SUMMARY="${{ github.event.issue.title }}"
         ISSUE_BODY="${{ github.event.issue.body }}"
         ISSUE_URL="https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
+        ISSUE_LABEL="${{ github.event.issue.labels[0].name }}"
 
         # Create a new Jira card
          curl -X POST -u ${{ secrets.JIRA_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
