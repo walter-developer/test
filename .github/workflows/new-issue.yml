@@ -15,7 +15,6 @@ jobs:
       env:
        JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
        JIRA_TOKEN_API: ${{ secrets.JIRA_TOKEN_API }}
-      #run: echo ${{ secrets.JIRA_ACCOUNT }}
       run: |
         ISSUE_URL="https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}"
         echo "Issue URL: $ISSUE_URL"
@@ -57,14 +56,7 @@ jobs:
       if: env.TOTAL == '0'
       run: |
         JIRA_URL="https://arkama.atlassian.net"
-        JIRA_PROJECT_KEY="ARKAMA"
-        ISSUE_TYPE="Task"
-        ISSUE_SUMMARY="${{ github.event.issue.title }}"
-        ISSUE_URL="https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
-        ISSUE_LABEL="${{ github.event.issue.labels[0].name }}"
-        ISSUE_LABEL="${ISSUE_LABEL:-feature}"
-
-        #echo "debug description: $ISSUE_BODY"
+        JIRA_URI="/rest/api/2/issue/"
 
         # Create a new Jira card
          curl -X POST -u ${{ env.JIRA_EMAIL }}:${{ env.JIRA_API_TOKEN }} \
@@ -72,11 +64,11 @@ jobs:
          --data-raw '{
            "fields": { 
                    "project": {"key": "ARKAMA"},
-                   "issuetype": {"name":"'"${ISSUE_TYPE}"'"},
+                   "issuetype": {"name":"Task"},
                    "summary": ${{ toJSON(github.event.issue.title) }},
-                   "description": ${{ toJSON(github.event.issue.body) }},
-                   "customfield_10071" : "'"${ISSUE_URL}"'",
+                   "description": ${{ toJSON(github.event.issue.body || github.event.issue.title) }},
+                   "customfield_10071" : "https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}",
                    "customfield_10065": {"name": "Label","value": ${{ toJSON(github.event.issue.labels[0].name || 'feature') }} }
                 }
          }'\
-         "$JIRA_URL/rest/api/2/issue"
+         "$JIRA_URL$JIRA_URI"
