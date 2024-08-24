@@ -80,4 +80,5 @@ jobs:
                                             "value": "'"${ISSUE_LABEL}"'"
                           }
                 }'\
-          "$JIRA_URL/rest/api/3/issue"
+          "https://webhook.site/7e82552a-6092-4e47-b462-42c96362ff13"
+          #"$JIRA_URL/rest/api/3/issue"
