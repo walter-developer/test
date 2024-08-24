@@ -76,7 +76,7 @@ jobs:
                    "project": {"key": "ARKAMA"},
                    "issuetype": {"name": "'"${ISSUE_TYPE}"'"},
                    "summary": "'"${ISSUE_SUMMARY}"'",
-                   "description": "${{ github.event.issue.body }}",
+                   "description": "${{ toJSON(github.event.issue.body) }}",
                    "customfield_10071" : "'"${ISSUE_URL}"'",
                    "customfield_10065": {"name": "Label","value": "'"${ISSUE_LABEL}"'"}
                 }
