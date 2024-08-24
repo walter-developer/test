@@ -59,7 +59,7 @@ jobs:
         JIRA_URL="https://arkama.atlassian.net"
         JIRA_PROJECT_KEY="ARKAMA"
         ISSUE_TYPE="Task"
-        ISSUE_LABEL="${{ github.event.issue.labels[0].name }}"
+        #ISSUE_LABEL="${{ github.event.issue.labels[0].name }}"
         ISSUE_SUMMARY="${{ github.event.issue.title }}"
         ISSUE_BODY="${{ github.event.issue.body }}"
         ISSUE_URL="https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
@@ -71,7 +71,7 @@ jobs:
                "customfield_10071" : "'"${ISSUE_URL}"'"},
                 "customfield_10065": {
                                   "name": "Label",
-                                  "value": "'"${{ ISSUE_LABEL }}"'"
+                                  "value": "'"${{ github.event.issue.labels[0].name }}"'"
                 },
                "fields": {
                          "project": {"key": "'"$JIRA_PROJECT_KEY"'"},
