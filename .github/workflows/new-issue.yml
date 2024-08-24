@@ -68,5 +68,5 @@ jobs:
         # Create a new Jira card
          curl -X POST -u ${{ env.JIRA_EMAIL }}:${{ env.JIRA_API_TOKEN }} \
          --header "Content-Type: application/json" \
-         --data '{"fields": { "project": {"key": "ARKAMA"},"issuetype": {"name": "'"${ISSUE_TYPE}"'"},"summary": "'"${ISSUE_SUMMARY}"'","description": "'"${{ISSUE_BODY}}"'","customfield_10071" : "'"${ISSUE_URL}"'","customfield_10065": {"name": "Label","value": "'"${ISSUE_LABEL}"'"}}}'\
+         --data '{"fields": { "project": {"key": "ARKAMA"},"issuetype": {"name": "'"${ISSUE_TYPE}"'"},"summary": "'"${ISSUE_SUMMARY}"'","description": "'"${ISSUE_BODY}"'","customfield_10071" : "'"${ISSUE_URL}"'","customfield_10065": {"name": "Label","value": "'"${ISSUE_LABEL}"'"}}}'\
          "$JIRA_URL/rest/api/2/issue"
