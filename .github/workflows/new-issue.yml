@@ -60,7 +60,7 @@ jobs:
         JIRA_PROJECT_KEY="ARKAMA"
         ISSUE_TYPE="Task"
         ISSUE_SUMMARY="${{ github.event.issue.title }}"
-        ISSUE_BODY="${{ toJSON(github.event.issue.body) }}"
+        ISSUE_BODY="${{ fromJSON(github.event.issue.body) }}"
         ISSUE_URL="https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
         ISSUE_LABEL="${{ github.event.issue.labels[0].name }}"
         ISSUE_LABEL="${ISSUE_LABEL:-feature}"
