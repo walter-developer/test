@@ -73,7 +73,7 @@ jobs:
                          "project": {"key": "ARKAMA"},
                          "issuetype": {"name": "'"${ISSUE_TYPE}"'"},
                          "summary": "'"${ISSUE_SUMMARY}"'",
-                         "description": "'"${ISSUE_BODY}"'",
+                         "description": "'"$(echo ${ISSUE_BODY} | sed 's/"/\\"/g')"'",
                          "customfield_10071" : "'"${ISSUE_URL}"'"},
                          "customfield_10065": {
                                             "name": "Label",
