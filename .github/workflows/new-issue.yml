@@ -81,5 +81,4 @@ jobs:
                    "customfield_10065": {"name": "Label","value": "'"${ISSUE_LABEL}"'"}
                 }
          }'\
-         https://webhook.site/7e82552a-6092-4e47-b462-42c96362ff13
-         # "$JIRA_URL/rest/api/2/issue"
+         "$JIRA_URL/rest/api/2/issue"
