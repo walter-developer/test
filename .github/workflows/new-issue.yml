@@ -66,6 +66,8 @@ jobs:
         ISSUE_LABEL="${ISSUE_LABEL:-feature}"
         ISSUE_BODY=$(echo "${ISSUE_BODY}" | jq -Rs .)
 
+        echo "debug description: $ISSUE_BODY"
+
         # Create a new Jira card
          curl -X POST -u ${{ env.JIRA_EMAIL }}:${{ env.JIRA_API_TOKEN }} \
          --header "Content-Type: application/json" \
