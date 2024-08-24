@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: build
     steps:
-      - name: Use secret in a script
-        run: echo "The secret value is ${{ secrets.JIRA_ACCOUNT }} and token ${{ secrets.JIRA_API_TOKEN }}"
-      - name: Print all environment variables
-        run: env
+      - name: Show repo env secret
+        run: |
+          echo ${{ secrets.JIRA_ACCOUNT }}
