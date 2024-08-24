@@ -64,6 +64,7 @@ jobs:
         ISSUE_URL="https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
         ISSUE_LABEL="${{ github.event.issue.labels[0].name }}"
         ISSUE_LABEL="${ISSUE_LABEL:-feature}"
+        ISSUE_BODY=$(echo "${ISSUE_BODY}" | jq -Rs .)
 
         # Create a new Jira card
          curl -X POST -u ${{ env.JIRA_EMAIL }}:${{ env.JIRA_API_TOKEN }} \
