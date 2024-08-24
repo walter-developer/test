@@ -60,11 +60,9 @@ jobs:
         JIRA_PROJECT_KEY="ARKAMA"
         ISSUE_TYPE="Task"
         ISSUE_SUMMARY="${{ github.event.issue.title }}"
-        ISSUE_BODY="${{ toJSON(github.event.issue.body) }}"
         ISSUE_URL="https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
         ISSUE_LABEL="${{ github.event.issue.labels[0].name }}"
         ISSUE_LABEL="${ISSUE_LABEL:-feature}"
-        #ISSUE_BODY=$(echo "${ISSUE_BODY}" | jq -Rs .)
 
         #echo "debug description: $ISSUE_BODY"
 
@@ -74,7 +72,7 @@ jobs:
          --data-raw '{
            "fields": { 
                    "project": {"key": "ARKAMA"},
-                   "issuetype": {"name":"'"${ISSUE_SUMMARY}"'"},
+                   "issuetype": {"name":"'"${ISSUE_TYPE}"'"},
                    "summary": "'"${ISSUE_SUMMARY}"'",
                    "description": ${{ toJSON(github.event.issue.body) }},
                    "customfield_10071" : "'"${ISSUE_URL}"'",
