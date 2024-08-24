@@ -69,13 +69,13 @@ jobs:
          curl -X POST -u ${{ secrets.JIRA_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
          --header "Content-Type: application/json" \
          --data '{
-               "customfield_10071" : "'"${ISSUE_URL}"'"},
-                "customfield_10065": {
+              "customfield_10071" : "'"${ISSUE_URL}"'"},
+              "customfield_10065": {
                                   "name": "Label",
                                   "value": "'"${ISSUE_LABEL}"'"
                 },
                "fields": {
-                         "project": {"key": "'"$JIRA_PROJECT_KEY"'"},
+                         "project": {"key": "ARKAMA"},
                          "issuetype": {"name": "'"${ISSUE_TYPE}"'"},
                          "summary": "'"${ISSUE_SUMMARY}"'",
                          "description": "'"${ISSUE_BODY}"'"
